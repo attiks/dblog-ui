@@ -1,0 +1,7 @@
+{
+  "name": "dblog",
+  "short_name": "dblog",
+  "description": "Drupal 8 dblog UI",
+  "start_url": "/",
+  "display": "standalone"
+}

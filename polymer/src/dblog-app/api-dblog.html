@@ -1,0 +1,75 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="api-dblog">
+  <template>
+    <iron-ajax
+      auto
+      on-response="_handleResponse"
+      url="/api/dblog-ui/events?type=[[type]]&page=[[page]]&severity=[[severity]]&size=[[size]]"
+    ></iron-ajax>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'api-dblog',
+
+      properties: {
+        page: {
+          type: Number,
+          notify: true,
+          value: 0,
+        },
+        size: {
+          type: Number,
+          notify: true,
+          value: 50,
+        },
+        totalElements: {
+          type: Number,
+          notify: true,
+          value: 0,
+        },
+        totalPages: {
+          type: Number,
+          notify: true,
+          value: 0,
+        },
+        data: {
+          type: Array,
+          notify: true,
+        },
+        severity: {
+          type: String,
+          notify: true,
+          value: '',
+        },
+        type: {
+          type: String,
+          notify: true,
+          value: '',
+        },
+        severityOptions: {
+          type: Array,
+          notify: true,
+        },
+        typeOptions: {
+          type: Array,
+          notify: true,
+        },
+        sortProperty: String,
+      },
+
+      _handleResponse: function(event) {
+        var response = event.detail.response;
+        this.data = response.data;
+        this.totalElements = response.total;
+        this.totalPages = Math.floor(response.total / this.size);
+        this.severityOptions = response.severityOptions;
+        this.typeOptions = response.typeOptions;
+      }
+
+    });
+  </script>
+</dom-module>

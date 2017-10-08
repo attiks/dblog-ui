@@ -1,0 +1,128 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+
+<link rel="import" href="../../bower_components/paper-datatable-api/paper-datatable-api-column.html">
+<link rel="import" href="../../bower_components/paper-datatable-api/paper-datatable-api.html">
+<link rel="import" href="../../bower_components/paper-datatable-api/paper-datatable-api-icons.html">
+
+<link rel="import" href="api-dblog.html">
+
+<dom-module id="dblog-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      paper-input iron-icon {
+        color: var(--paper-grey-600);
+      }
+
+      .iron-selected {
+        background: #33cc33;
+      }
+
+      iron-selector {
+        display: flex;
+      }
+
+      iron-selector div {
+        flex: 1;
+        border: solid 1px #000;
+        padding: 10px;
+        margin: 10px;
+      }
+    </style>
+
+    <api-dblog
+      data="{{dataFromApi}}"
+      page="{{page}}"
+      size="{{size}}"
+      sort-property="[[sortProperty]]"
+      total-elements="{{totalElements}}"
+      total-pages="{{totalPages}}"
+      severity="{{activeSeverity}}"
+      type="{{activeType}}"
+      severity-options="{{severityOptions}}"
+      type-options="{{typeOptions}}"
+    ></api-dblog>
+
+    <iron-selector multi attr-for-selected="name" selected-values="{{activeSeverity}}" fallback-selection="">
+       <template is="dom-repeat" items="[[severityOptions]]" as="column" index-as="index">
+         <div name="[[index]]">[[column]]</div>
+       </template>
+    </iron-selector>
+
+    <iron-selector multi attr-for-selected="name" selected-values="{{activeType}}" fallback-selection="">
+       <template is="dom-repeat" items="[[typeOptions]]" as="column">
+         <div name="[[column]]">[[column]]</div>
+       </template>
+    </iron-selector>
+
+    <paper-datatable-api
+      paginate
+      data="[[dataFromApi]]"
+      page="{{page}}"
+      size="{{size}}"
+      available-size="[10, 25, 50, 100]"
+      total-elements="[[totalElements]]"
+      total-pages="[[totalPages]]"
+    >
+      <paper-datatable-api-column draggable-column header="Severity" property="severityClass">
+        <template>
+          <span>{{value}}</span>
+        </template>
+      </paper-datatable-api-column>
+      <paper-datatable-api-column draggable-column header="Type" property="type">
+        <template>
+          <span>{{value}}</span>
+        </template>
+      </paper-datatable-api-column>
+      <paper-datatable-api-column header="Date" property="date">
+        <template>
+          <span>{{value}}</span>
+        </template>
+      </paper-datatable-api-column>
+      <paper-datatable-api-column header="Message" property="message">
+        <template>
+          <span>{{value}}</span>
+        </template>
+      </paper-datatable-api-column>
+      <paper-datatable-api-column header="User" property="user.name" hideable>
+        <template>
+          <span>{{value}}</span>
+        </template>
+      </paper-datatable-api-column>
+      <paper-datatable-api-column header="Operations" property="link" hideable>
+        <template>
+          <span>{{value}}</span>
+        </template>
+      </paper-datatable-api-column>
+    </paper-datatable-api>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class DblogApp extends Polymer.Element {
+      static get is() { return 'dblog-app'; }
+      static get properties() {
+        return {
+          page: {
+            type: String,
+            value: '0'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(DblogApp.is, DblogApp);
+  </script>
+</dom-module>
