@@ -150,6 +150,7 @@ class DblogUiController extends ControllerBase {
     $result = $query->execute();
 
     $severity_classes = static::getLogLevelClassMap();
+    $severityOptions = RfcLogLevel::getLevels();
     $data = [];
     foreach ($result as $event) {
 
@@ -164,7 +165,9 @@ class DblogUiController extends ControllerBase {
         'user' => $user,
         'date' => $this->dateFormatter->format($event->timestamp, 'short'),
         'message' => Unicode::truncate($this->formatMessage($event), 130, TRUE, TRUE),
+        'messageFull' => $this->formatMessage($event),
         'severityClass' => $severity_classes[$event->severity],
+        'severity' => $severityOptions[$event->severity],
         'link' => $event->link,
       ];
     }
@@ -176,7 +179,7 @@ class DblogUiController extends ControllerBase {
       'data' => $data,
       'total' => $total,
       'typeOptions' => isset($filters['type']['options']) ? array_keys($filters['type']['options']) : [],
-      'severityOptions' => RfcLogLevel::getLevels(),
+      'severityOptions' => $severityOptions,
     ];
     return new JsonResponse($response);
   }
