@@ -98,8 +98,15 @@ class DblogUiController extends ControllerBase {
     /** @var \Drupal\Core\Database\Query\SelectInterface $query */
     $query = $this->dbConnection->select('watchdog', 'w')
       ->extend('\Drupal\Core\Database\Query\PagerSelectExtender')
-      ->fields('w')
-      ->limit(50);
+      ->fields('w');
+
+    $supplied_size = $request->query->get('size');
+    if ($supplied_size && is_numeric($supplied_size)) {
+      $query->limit($supplied_size);
+    }
+    else {
+      $query->limit(50);
+    }
 
     // Apply sort parameters.
     $supplied_order = $request->query->get('order');
@@ -135,7 +142,7 @@ class DblogUiController extends ControllerBase {
     }
 
     $severity = $request->query->get('severity');
-    if (!is_null($severity)) {
+    if ($severity) {
       $query->condition('severity', explode(',', $severity), 'IN');
     }
 
@@ -169,6 +176,7 @@ class DblogUiController extends ControllerBase {
       'data' => $data,
       'total' => $total,
       'typeOptions' => isset($filters['type']['options']) ? array_keys($filters['type']['options']) : [],
+      'severityOptions' => RfcLogLevel::getLevels(),
     ];
     return new JsonResponse($response);
   }
@@ -253,4 +261,3 @@ class DblogUiController extends ControllerBase {
   }
 
 }
-
