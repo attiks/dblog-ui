@@ -167,6 +167,9 @@ class DblogUiController extends ControllerBase {
         'severityClass' => $severity_classes[$event->severity],
         'severity' => $severityOptions[$event->severity],
         'link' => $event->link,
+        'referrer' => $event->referer,
+        'hostname' => $event->hostname,
+        'location' => $event->location,
       ];
     }
 
@@ -180,48 +183,6 @@ class DblogUiController extends ControllerBase {
       'severityOptions' => $severityOptions,
     ];
     return new JsonResponse($response);
-  }
-
-  /**
-   * Provides details about a specific log message.
-   *
-   * @param int $event_id
-   *   Unique ID of the database log message.
-   *
-   * @return \Symfony\Component\HttpFoundation\JsonResponse
-   *   A single database log entry.
-   */
-  public function eventDetails($event_id) {
-
-    $event = $this->dbConnection->select('watchdog', 'w')
-      ->fields('w')
-      ->condition('wid', $event_id)
-      ->execute()
-      ->fetch();
-
-    if (!$event) {
-      throw new NotFoundHttpException();
-    }
-
-    /** @var \Drupal\user\Entity\User $account */
-    $account = $this->entityTypeManager->getStorage('user')->load($event->uid);
-    $user = [];
-    $user['name'] = $account->getDisplayName();
-    $user['url'] = $account->isAuthenticated() ? $account->toUrl()->toString() : NULL;
-
-    $data = [
-      'type' => $event->type,
-      'user' => $user,
-      'date' => $this->dateFormatter->format($event->timestamp, 'short'),
-      'message' => $this->formatMessage($event),
-      'severity' => $event->severity,
-      'referrer' => $event->referer,
-      'hostname' => $event->hostname,
-      'location' => $event->location,
-      'link' => $event->link,
-    ];
-
-    return new JsonResponse($data);
   }
 
   /**

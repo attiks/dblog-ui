@@ -18,6 +18,12 @@
       .meta div {
         flex: 1;
       }
+
+      .more-info {
+        border-top: solid 1px #323232;
+        margin-top: 1rem;
+        padding-top: 1rem;
+      }
     </style>
 
     <div class="meta">
@@ -25,8 +31,13 @@
       <div>[[eventDetail.severity]]</div>
       <div>[[eventDetail.type]]</div>
     </div>
-    <div>
+    <div class="message">
       <drupal-safe text="[[eventDetail.messageFull]]"></drupal-safe>
+    </div>
+    <div class="more-info">
+      <div><strong>Referer:</strong> [[eventDetail.referrer]]</div>
+      <div><strong>Hostname:</strong> [[eventDetail.hostname]]</div>
+      <div><strong>Location:</strong> [[eventDetail.location]]</div>
     </div>
   </template>
 

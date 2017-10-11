@@ -4,10 +4,3 @@ dblog_ui.records:
     _controller: '\Drupal\dblog_ui\Controller\DblogUiController::events'
   requirements:
     _permission: 'access site reports'
-
-dblog_ui.record:
-  path: '/api/dblog-ui/event/{event_id}'
-  defaults:
-    _controller: '\Drupal\dblog_ui\Controller\DblogUiController::eventDetails'
-  requirements:
-    _permission: 'access site reports'
