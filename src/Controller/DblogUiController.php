@@ -85,8 +85,6 @@ class DblogUiController extends ControllerBase {
    */
   public function overview() {
     $build['content'] = ['#theme' => 'dblog_ui'];
-    $build['#attached']['library'][] = 'dblog_ui/dblog_ui';
-    $build['#attached']['drupalSettings']['dblogUi']['severityLevels'] = RfcLogLevel::getLevels();
     return $build;
   }
 
