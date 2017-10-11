@@ -1,10 +1,10 @@
 DB Log UI Drupal module
 -----------------------
 
-For the moment: Log in as admin and navigate to /modules/custom/dblog-ui/polymer/
+Log in as admin and navigate to /admin/reports/dblog
 
 ## Todo
 
 - Use polymer 2
-- Integrate with page callback in Drupal
-- Remove vue code
+- ~~Integrate with page callback in Drupal~~
+- ~~Remove vue code~~
