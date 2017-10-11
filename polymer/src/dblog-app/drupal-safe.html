@@ -1,0 +1,32 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="drupal-safe">
+  <template>
+    <div id="content"></div>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class DrupalSafe extends Polymer.Element {
+      static get is() { return 'drupal-safe'; }
+      static get properties() {
+        return {
+          text: {
+            type: String,
+            notify: true,
+            observer: 'updateText',
+          },
+        };
+      }
+      updateText() {
+        console.log(this.text);
+        this.$.content.innerHTML = this.text;
+      }
+    }
+
+    window.customElements.define(DrupalSafe.is, DrupalSafe);
+  </script>
+</dom-module>

@@ -13,6 +13,7 @@
 
 <link rel="import" href="api-dblog.html">
 <link rel="import" href="dblog-detail.html">
+<link rel="import" href="drupal-safe.html">
 
 <dom-module id="dblog-app">
   <template>
@@ -46,6 +47,8 @@
         background-color: #cdcdcd;
         color: #000000;
         padding: 2rem;
+
+        width: calc(100% - 200px);
       }
     </style>
 
@@ -114,7 +117,7 @@
       </paper-datatable-api-column>
       <paper-datatable-api-column header="Message" property="message">
         <template>
-          <span>{{value}}</span>
+          <drupal-safe text="{{value}}"></drupal-safe>
         </template>
       </paper-datatable-api-column>
       <paper-datatable-api-column header="User" property="user.name" hideable>

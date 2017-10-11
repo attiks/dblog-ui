@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="drupal-safe.html">
 
 <dom-module id="dblog-detail">
   <template>
@@ -7,15 +8,25 @@
         display: block;
         padding: 2rem;
       }
+      .meta {
+        display: flex;
+        border-bottom: solid 1px #323232;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+      }
+
+      .meta div {
+        flex: 1;
+      }
     </style>
 
-    <div>
+    <div class="meta">
       <div>[[eventDetail.date]]</div>
       <div>[[eventDetail.severity]]</div>
       <div>[[eventDetail.type]]</div>
     </div>
     <div>
-      [[eventDetail.messageFull]]
+      <drupal-safe text="[[eventDetail.messageFull]]"></drupal-safe>
     </div>
   </template>
 
