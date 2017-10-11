@@ -27,6 +27,12 @@
             value: false,
             observer: '_autoUpdate',
           },
+          messageFilter: {
+            type: String,
+            notify: true,
+            value: '',
+            observer: '_filterByMessage',
+          },
           page: {
             type: Number,
             notify: true,
@@ -75,11 +81,22 @@
 
       _handleResponse(event) {
         var response = event.detail.response;
-        this.data = response.data;
         this.totalElements = response.total;
         this.totalPages = Math.floor(response.total / this.size);
         this.severityOptions = response.severityOptions;
         this.typeOptions = response.typeOptions;
+
+        this.allData = response.data;
+        this._filterByMessage();
+      }
+
+      _filterByMessage() {
+        if (this.messageFilter != '') {
+          this.data = this.allData.filter(obj => obj.messageFull.toLowerCase().indexOf(this.messageFilter.toLowerCase()) > -1);
+        }
+        else {
+          this.data = this.allData;
+        }
       }
 
       refresh() {

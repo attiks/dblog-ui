@@ -64,6 +64,7 @@
       type="{{activeType}}"
       severity-options="{{severityOptions}}"
       type-options="{{typeOptions}}"
+      message-filter="[[messageFilter]]"
     ></api-dblog>
 
     <paper-toggle-button active="{{autoUpdate}}">Auto update</paper-toggle-button>
@@ -92,6 +93,8 @@
 
     <paper-datatable-api
       paginate
+      filterable
+      filters
       data="[[dataFromApi]]"
       page="{{page}}"
       size="{{size}}"
@@ -99,6 +102,7 @@
       total-elements="[[totalElements]]"
       total-pages="[[totalPages]]"
       on-tap-tr="_showDetails"
+      on-filter="_handleFilter"
     >
       <paper-datatable-api-column draggable-column header="Severity" property="severity">
         <template>
@@ -115,7 +119,7 @@
           <span>{{value}}</span>
         </template>
       </paper-datatable-api-column>
-      <paper-datatable-api-column header="Message" property="message">
+      <paper-datatable-api-column header="Message" property="message" filter>
         <template>
           <drupal-safe text="{{value}}"></drupal-safe>
         </template>
@@ -147,6 +151,11 @@
             type: String,
             value: '0'
           },
+          messageFilter: {
+            type: String,
+            notify: true,
+            value: '',
+          },
           selectedItem: {
             type: Object,
             notify: true,
@@ -157,6 +166,12 @@
       _showDetails(ev) {
         this.selectedItem = ev.detail.row;
         this.$.dialogEventDetail.open();
+      }
+
+      _handleFilter(event) {
+        if (event.detail.filter.property == 'message') {
+          this.messageFilter = event.detail.filter.value;
+        }
       }
     }
 
