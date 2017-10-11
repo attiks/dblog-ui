@@ -5,12 +5,14 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 
 <link rel="import" href="../../bower_components/paper-datatable-api/paper-datatable-api-column.html">
 <link rel="import" href="../../bower_components/paper-datatable-api/paper-datatable-api.html">
 <link rel="import" href="../../bower_components/paper-datatable-api/paper-datatable-api-icons.html">
 
 <link rel="import" href="api-dblog.html">
+<link rel="import" href="dblog-detail.html">
 
 <dom-module id="dblog-app">
   <template>
@@ -37,6 +39,14 @@
         padding: 10px;
         margin: 10px;
       }
+
+      paper-dialog {
+        border: 2px solid;
+        border-color: #232323;
+        background-color: #cdcdcd;
+        color: #000000;
+        padding: 2rem;
+      }
     </style>
 
     <api-dblog
@@ -54,6 +64,16 @@
     ></api-dblog>
 
     <paper-toggle-button active="{{autoUpdate}}">Auto update</paper-toggle-button>
+
+    <paper-dialog id="dialogEventDetail">
+      <h2>Event details</h2>
+      <paper-dialog-scrollable>
+        <dblog-detail event-detail="[[selectedItem]]"></dblog-detail>
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss autofocus>Close</paper-button>
+      </div>
+    </paper-dialog>
 
     <iron-selector multi attr-for-selected="name" selected-values="{{activeSeverity}}" fallback-selection="">
        <template is="dom-repeat" items="[[severityOptions]]" as="column" index-as="index">
@@ -75,6 +95,7 @@
       available-size="[10, 25, 50, 100]"
       total-elements="[[totalElements]]"
       total-pages="[[totalPages]]"
+      on-tap-tr="_showDetails"
     >
       <paper-datatable-api-column draggable-column header="Severity" property="severity">
         <template>
@@ -122,8 +143,19 @@
           page: {
             type: String,
             value: '0'
+          },
+          selectedItem: {
+            type: Object,
+            notify: true,
           }
         };
+      }
+
+      _showDetails(ev) {
+        console.log('detail');
+        console.log(ev);
+        this.selectedItem = ev.detail.row;
+        this.$.dialogEventDetail.open();
       }
     }
 

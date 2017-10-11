@@ -1,0 +1,41 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="dblog-detail">
+  <template>
+    <style>
+      :host {
+        display: block;
+        padding: 2rem;
+      }
+    </style>
+
+    <div>
+      <div>[[eventDetail.date]]</div>
+      <div>[[eventDetail.severity]]</div>
+      <div>[[eventDetail.type]]</div>
+    </div>
+    <div>
+      [[eventDetail.messageFull]]
+    </div>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class DblogDetail extends Polymer.Element {
+      static get is() { return 'dblog-detail'; }
+      static get properties() {
+        return {
+          eventDetail: {
+            type: Object,
+            notify: true,
+          },
+        };
+      }
+    }
+
+    window.customElements.define(DblogDetail.is, DblogDetail);
+  </script>
+</dom-module>
