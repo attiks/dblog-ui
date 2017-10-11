@@ -5,7 +5,8 @@
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
     "paper-datatable-api": "^2.0.8",
-    "iron-icons": "^2.0.1"
+    "iron-icons": "^2.0.1",
+    "paper-toggle-button": "^2.0.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",

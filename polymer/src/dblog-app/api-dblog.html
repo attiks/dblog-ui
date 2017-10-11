@@ -5,63 +5,75 @@
   <template>
     <iron-ajax
       auto
+      id="ajax"
       on-response="_handleResponse"
       url="/api/dblog-ui/events?type=[[type]]&page=[[page]]&severity=[[severity]]&size=[[size]]"
+      debounce-duration="300"
     ></iron-ajax>
   </template>
 
   <script>
-    Polymer({
+    /**
+     * @customElement
+     * @polymer
+     */
+    class ApiDblog extends Polymer.Element {
+      static get is() { return 'api-dblog'; }
+      static get properties() {
+        return {
+          autoUpdate: {
+            type: Boolean,
+            notify: true,
+            value: false,
+            observer: '_autoUpdate',
+          },
+          page: {
+            type: Number,
+            notify: true,
+            value: 0,
+          },
+          size: {
+            type: Number,
+            notify: true,
+            value: 50,
+          },
+          totalElements: {
+            type: Number,
+            notify: true,
+            value: 0,
+          },
+          totalPages: {
+            type: Number,
+            notify: true,
+            value: 0,
+          },
+          data: {
+            type: Array,
+            notify: true,
+          },
+          severity: {
+            type: String,
+            notify: true,
+            value: '',
+          },
+          type: {
+            type: String,
+            notify: true,
+            value: '',
+          },
+          severityOptions: {
+            type: Array,
+            notify: true,
+          },
+          typeOptions: {
+            type: Array,
+            notify: true,
+          },
+          sortProperty: String,
+        };
+      }
 
-      is: 'api-dblog',
-
-      properties: {
-        page: {
-          type: Number,
-          notify: true,
-          value: 0,
-        },
-        size: {
-          type: Number,
-          notify: true,
-          value: 50,
-        },
-        totalElements: {
-          type: Number,
-          notify: true,
-          value: 0,
-        },
-        totalPages: {
-          type: Number,
-          notify: true,
-          value: 0,
-        },
-        data: {
-          type: Array,
-          notify: true,
-        },
-        severity: {
-          type: String,
-          notify: true,
-          value: '',
-        },
-        type: {
-          type: String,
-          notify: true,
-          value: '',
-        },
-        severityOptions: {
-          type: Array,
-          notify: true,
-        },
-        typeOptions: {
-          type: Array,
-          notify: true,
-        },
-        sortProperty: String,
-      },
-
-      _handleResponse: function(event) {
+      _handleResponse(event) {
         var response = event.detail.response;
         this.data = response.data;
         this.totalElements = response.total;
@@ -70,6 +82,30 @@
         this.typeOptions = response.typeOptions;
       }
 
-    });
+      refresh() {
+        this.$.ajax.generateRequest();
+      }
+
+      _autoUpdate() {
+        if (this.autoUpdate) {
+          this.intervalId = setInterval(() => this.refresh(), 5000);
+        }
+        else {
+          if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = 0;
+          }
+        }
+      }
+
+      ready() {
+        super.ready();
+        this._autoUpdate();
+      }
+
+    }
+
+    window.customElements.define(ApiDblog.is, ApiDblog);
   </script>
+
 </dom-module>
