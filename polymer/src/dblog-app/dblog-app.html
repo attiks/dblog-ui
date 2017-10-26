@@ -22,165 +22,168 @@
 <link rel="import" href="drupal-safe.html">
 
 <dom-module id="dblog-app">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
 
-      paper-input iron-icon {
-        color: var(--paper-grey-600);
-      }
+            paper-input iron-icon {
+                color: var(--paper-grey-600);
+            }
 
-      .iron-selected {
-        background: #33cc33;
-      }
+            .iron-selected {
+                background: #33cc33;
+            }
 
-      iron-selector {
-        display: flex;
-      }
+            iron-selector {
+                display: flex;
+            }
 
-      iron-selector div {
-        flex: 1;
-        border: solid 1px #000;
-        padding: 10px;
-        margin: 10px;
-      }
+            iron-selector div {
+                flex: 1;
+                border: solid 1px #000;
+                padding: 10px;
+                margin: 10px;
+            }
 
-      paper-dialog {
-        border: 2px solid;
-        border-color: #232323;
-        background-color: #cdcdcd;
-        color: #000000;
-        padding: 2rem;
+            paper-dialog {
+                border: 2px solid;
+                border-color: #232323;
+                background-color: #cdcdcd;
+                color: #000000;
+                padding: 2rem;
 
-        width: calc(100% - 200px);
-      }
-    </style>
+                width: calc(100% - 200px);
+            }
+        </style>
 
-    <api-dblog
-      auto-update={{autoUpdate}}
-      data="{{dataFromApi}}"
-      page="{{page}}"
-      size="{{size}}"
-      sort-property="[[sortProperty]]"
-      total-elements="{{totalElements}}"
-      total-pages="{{totalPages}}"
-      severity="{{activeSeverity}}"
-      type="{{activeType}}"
-      severity-options="{{severityOptions}}"
-      type-options="{{typeOptions}}"
-      message-filter="[[messageFilter]]"
-    ></api-dblog>
+        <api-dblog
+                auto-update={{autoUpdate}}
+                data="{{dataFromApi}}"
+                page="{{page}}"
+                size="{{size}}"
+                sort-property="[[sortProperty]]"
+                total-elements="{{totalElements}}"
+                total-pages="{{totalPages}}"
+                severity="{{activeSeverity}}"
+                type="{{activeType}}"
+                severity-options="{{severityOptions}}"
+                type-options="{{typeOptions}}"
+                message-filter="[[messageFilter]]"
+        ></api-dblog>
 
-    <paper-toggle-button active="{{autoUpdate}}">Auto update</paper-toggle-button>
+        <paper-toggle-button active="{{autoUpdate}}">Auto update</paper-toggle-button>
 
-    <paper-dialog id="dialogEventDetail">
-      <h2>Event details</h2>
-      <paper-dialog-scrollable>
-        <dblog-detail event-detail="[[selectedItem]]"></dblog-detail>
-      </paper-dialog-scrollable>
-      <div class="buttons">
-        <paper-button dialog-dismiss autofocus>Close</paper-button>
-      </div>
-    </paper-dialog>
+        <paper-dialog id="dialogEventDetail">
+            <h2>Event details</h2>
+            <paper-dialog-scrollable>
+                <dblog-detail event-detail="[[selectedItem]]"></dblog-detail>
+            </paper-dialog-scrollable>
+            <div class="buttons">
+                <paper-button dialog-dismiss autofocus>Close</paper-button>
+            </div>
+        </paper-dialog>
 
-    <iron-selector multi attr-for-selected="name" selected-values="{{activeSeverity}}" fallback-selection="">
-       <template is="dom-repeat" items="[[severityOptions]]" as="column" index-as="index">
-         <div name="[[index]]">[[column]]</div>
-       </template>
-    </iron-selector>
+        <iron-selector multi attr-for-selected="name" selected-values="{{activeSeverity}}" fallback-selection="">
+            <template is="dom-repeat" items="[[severityOptions]]" as="column" index-as="index">
+                <div name="[[index]]">[[column]]</div>
+            </template>
+        </iron-selector>
 
-    <iron-selector multi attr-for-selected="name" selected-values="{{activeType}}" fallback-selection="">
-       <template is="dom-repeat" items="[[typeOptions]]" as="column">
-         <div name="[[column]]">[[column]]</div>
-       </template>
-    </iron-selector>
+        <iron-selector multi attr-for-selected="name" selected-values="{{activeType}}" fallback-selection="">
+            <template is="dom-repeat" items="[[typeOptions]]" as="column">
+                <div name="[[column]]">[[column]]</div>
+            </template>
+        </iron-selector>
 
-    <vaadin-grid aria-label="Basic Binding Example" items="[[dataFromApi]]">
+        <vaadin-grid aria-label="Basic Binding Example" items="[[dataFromApi]]">
 
-             <vaadin-grid-column>
-               <template class="header">
+            <vaadin-grid-column>
+                <template class="header">
              <span draggable="true">
                Type
              </span>
-               </template>
-               <template>
+                </template>
+                <template>
              <span draggable="true">
                [[item.type]]
              </span>
-               </template>
-             </vaadin-grid-column>
+                </template>
+            </vaadin-grid-column>
 
-             <vaadin-grid-column>
-               <template class="header">Date</template>
-               <template>[[item.date]]</template>
+            <vaadin-grid-column>
+                <template class="header">Date</template>
+                <template>[[item.date]]</template>
 
-             </vaadin-grid-column>
+            </vaadin-grid-column>
 
-             <vaadin-grid-column>
-               <template class="header">Message</template>
-               <template>
-                 <p style="white-space: normal">[[item.message]]</p>
-               </template>
-             </vaadin-grid-column>
+            <vaadin-grid-column>
+                <template class="header">Message</template>
+                <template>
+                    <p style="white-space: normal">[[item.message]]</p>
+                </template>
+            </vaadin-grid-column>
 
-             <vaadin-grid-column>
-               <template class="header">User</template>
-               <template>
-                 <p style="white-space: normal">[[item.user.name]]</p>
-               </template>
-             </vaadin-grid-column>
+            <vaadin-grid-column>
+                <template class="header">User</template>
+                <template>
+                    <p style="white-space: normal">[[item.user.name]]</p>
+                </template>
+            </vaadin-grid-column>
 
-             <vaadin-grid-column>
-               <template class="header">Operations</template>
-               <template>
-                 <p style="white-space: normal">[[item.link]]</p>
-               </template>
-             </vaadin-grid-column>
+            <vaadin-grid-column>
+                <template class="header">Operations</template>
+                <template>
+                    <p style="white-space: normal">[[item.link]]</p>
+                </template>
+            </vaadin-grid-column>
 
-           </vaadin-grid>
+        </vaadin-grid>
 
 
-  </template>
+    </template>
 
-  <script>
-    /**
-     * @customElement
-     * @polymer
-     */
-    class DblogApp extends Polymer.Element {
-      static get is() { return 'dblog-app'; }
-      static get properties() {
-        return {
-          page: {
-            type: String,
-            value: '0'
-          },
-          messageFilter: {
-            type: String,
-            notify: true,
-            value: '',
-          },
-          selectedItem: {
-            type: Object,
-            notify: true,
-          }
-        };
-      }
+    <script>
+        /**
+         * @customElement
+         * @polymer
+         */
+        class DblogApp extends Polymer.Element {
+            static get is() {
+                return 'dblog-app';
+            }
 
-      _showDetails(ev) {
-        this.selectedItem = ev.detail.row;
-        this.$.dialogEventDetail.open();
-      }
+            static get properties() {
+                return {
+                    page: {
+                        type: String,
+                        value: '0'
+                    },
+                    messageFilter: {
+                        type: String,
+                        notify: true,
+                        value: '',
+                    },
+                    selectedItem: {
+                        type: Object,
+                        notify: true,
+                    }
+                };
+            }
 
-      _handleFilter(event) {
-        if (event.detail.filter.property == 'message') {
-          this.messageFilter = event.detail.filter.value;
+            _showDetails(ev) {
+                this.selectedItem = ev.detail.row;
+                this.$.dialogEventDetail.open();
+            }
+
+            _handleFilter(event) {
+                if (event.detail.filter.property == 'message') {
+                    this.messageFilter = event.detail.filter.value;
+                }
+            }
         }
-      }
-    }
 
-    window.customElements.define(DblogApp.is, DblogApp);
-  </script>
+        window.customElements.define(DblogApp.is, DblogApp);
+    </script>
 </dom-module>
