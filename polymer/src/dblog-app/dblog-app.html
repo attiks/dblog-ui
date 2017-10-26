@@ -101,41 +101,33 @@
 
             <vaadin-grid-column>
                 <template class="header">
-             <span draggable="true">
-               Type
-             </span>
+                    <vaadin-grid-sorter path="type">Type</vaadin-grid-sorter>
                 </template>
-                <template>
-             <span draggable="true">
-               [[item.type]]
-             </span>
-                </template>
+                <template>[[item.type]]</template>
             </vaadin-grid-column>
 
             <vaadin-grid-column>
-                <template class="header">Date</template>
+                <template class="header">
+                    <vaadin-grid-sorter path="date">Date</vaadin-grid-sorter>
+                </template>
                 <template>[[item.date]]</template>
-
             </vaadin-grid-column>
 
             <vaadin-grid-column>
-                <template class="header">Message</template>
+                <template class="header">
+                    <vaadin-grid-sorter path="message">Message</vaadin-grid-sorter>
+                </template>
                 <template>
                     <p style="white-space: normal">[[item.message]]</p>
                 </template>
             </vaadin-grid-column>
 
             <vaadin-grid-column>
-                <template class="header">User</template>
+                <template class="header">
+                    <vaadin-grid-sorter path="user.name">User</vaadin-grid-sorter>
+                </template>
                 <template>
                     <p style="white-space: normal">[[item.user.name]]</p>
-                </template>
-            </vaadin-grid-column>
-
-            <vaadin-grid-column>
-                <template class="header">Operations</template>
-                <template>
-                    <p style="white-space: normal">[[item.link]]</p>
                 </template>
             </vaadin-grid-column>
 
