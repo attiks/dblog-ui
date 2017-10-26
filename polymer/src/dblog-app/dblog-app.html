@@ -11,6 +11,12 @@
 <link rel="import" href="../../bower_components/paper-datatable-api/paper-datatable-api.html">
 <link rel="import" href="../../bower_components/paper-datatable-api/paper-datatable-api-icons.html">
 
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-column-group.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-filter.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
+
 <link rel="import" href="api-dblog.html">
 <link rel="import" href="dblog-detail.html">
 <link rel="import" href="drupal-safe.html">
@@ -91,50 +97,50 @@
        </template>
     </iron-selector>
 
-    <paper-datatable-api
-      paginate
-      filterable
-      filters
-      data="[[dataFromApi]]"
-      page="{{page}}"
-      size="{{size}}"
-      available-size="[10, 25, 50, 100]"
-      total-elements="[[totalElements]]"
-      total-pages="[[totalPages]]"
-      on-tap-tr="_showDetails"
-      on-filter="_handleFilter"
-    >
-      <paper-datatable-api-column draggable-column header="Severity" property="severity">
-        <template>
-          <span>{{value}}</span>
-        </template>
-      </paper-datatable-api-column>
-      <paper-datatable-api-column draggable-column header="Type" property="type">
-        <template>
-          <span>{{value}}</span>
-        </template>
-      </paper-datatable-api-column>
-      <paper-datatable-api-column header="Date" property="date">
-        <template>
-          <span>{{value}}</span>
-        </template>
-      </paper-datatable-api-column>
-      <paper-datatable-api-column header="Message" property="message" filter>
-        <template>
-          <drupal-safe text="{{value}}"></drupal-safe>
-        </template>
-      </paper-datatable-api-column>
-      <paper-datatable-api-column header="User" property="user.name" hideable>
-        <template>
-          <span>{{value}}</span>
-        </template>
-      </paper-datatable-api-column>
-      <paper-datatable-api-column header="Operations" property="link" hideable>
-        <template>
-          <span>{{value}}</span>
-        </template>
-      </paper-datatable-api-column>
-    </paper-datatable-api>
+    <vaadin-grid aria-label="Basic Binding Example" items="[[dataFromApi]]">
+
+             <vaadin-grid-column>
+               <template class="header">
+             <span draggable="true">
+               Type
+             </span>
+               </template>
+               <template>
+             <span draggable="true">
+               [[item.type]]
+             </span>
+               </template>
+             </vaadin-grid-column>
+
+             <vaadin-grid-column>
+               <template class="header">Date</template>
+               <template>[[item.date]]</template>
+
+             </vaadin-grid-column>
+
+             <vaadin-grid-column>
+               <template class="header">Message</template>
+               <template>
+                 <p style="white-space: normal">[[item.message]]</p>
+               </template>
+             </vaadin-grid-column>
+
+             <vaadin-grid-column>
+               <template class="header">User</template>
+               <template>
+                 <p style="white-space: normal">[[item.user.name]]</p>
+               </template>
+             </vaadin-grid-column>
+
+             <vaadin-grid-column>
+               <template class="header">Operations</template>
+               <template>
+                 <p style="white-space: normal">[[item.link]]</p>
+               </template>
+             </vaadin-grid-column>
+
+           </vaadin-grid>
+
 
   </template>
 
