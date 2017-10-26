@@ -172,8 +172,8 @@
                 };
             }
 
-            _showDetails(ev) {
-                this.selectedItem = ev.detail.row;
+            _showDetails(event) {
+                this.selectedItem = event.detail.row;
                 this.$.dialogEventDetail.open();
             }
 
