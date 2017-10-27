@@ -101,7 +101,7 @@
             </template>
         </iron-selector>
 
-        <vaadin-grid active-item="{{activeItem}}" aria-label="Basic Binding Example" items="[[dataFromApi]]">
+        <vaadin-grid active-item="{{activeItem}}" aria-label="DB Log" items="[[dataFromApi]]">
 
           <template class="row-details">
             <div class="details">
@@ -128,7 +128,7 @@
                     <vaadin-grid-sorter path="message">Message</vaadin-grid-sorter>
                 </template>
                 <template>
-                    <p style="white-space: normal">[[item.message]]</p>
+                  <drupal-safe style="white-space: normal" text="[[item.message]]"></drupal-safe>
                 </template>
             </vaadin-grid-column>
 
