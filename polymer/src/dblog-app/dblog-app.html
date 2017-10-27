@@ -56,6 +56,10 @@
 
                 width: calc(100% - 200px);
             }
+
+            vaadin-grid {
+              height: auto;
+            }
         </style>
 
         <api-dblog
@@ -97,7 +101,13 @@
             </template>
         </iron-selector>
 
-        <vaadin-grid aria-label="Basic Binding Example" items="[[dataFromApi]]">
+        <vaadin-grid active-item="{{activeItem}}" aria-label="Basic Binding Example" items="[[dataFromApi]]">
+
+          <template class="row-details">
+            <div class="details">
+              <dblog-detail event-detail="[[item]]"></dblog-detail>
+            </div>
+          </template>
 
             <vaadin-grid-column>
                 <template class="header">
@@ -131,6 +141,12 @@
                 </template>
             </vaadin-grid-column>
 
+            <vaadin-grid-column width="100px">
+              <template class="header"></template>
+              <template>
+                <paper-checkbox aria-label$="Show Details" checked="{{expanded}}">Show Details</paper-checkbox>
+              </template>
+            </vaadin-grid-column>
         </vaadin-grid>
 
 
