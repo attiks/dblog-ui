@@ -11,170 +11,171 @@
 <link rel="import" href="../../bower_components/paper-datatable-api/paper-datatable-api.html">
 <link rel="import" href="../../bower_components/paper-datatable-api/paper-datatable-api-icons.html">
 
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-column-group.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-filter.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-sorter.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid-selection-column.html">
+
 <link rel="import" href="api-dblog.html">
 <link rel="import" href="dblog-detail.html">
 <link rel="import" href="drupal-safe.html">
 
 <dom-module id="dblog-app">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
 
-      paper-input iron-icon {
-        color: var(--paper-grey-600);
-      }
+            paper-input iron-icon {
+                color: var(--paper-grey-600);
+            }
 
-      .iron-selected {
-        background: #33cc33;
-      }
+            .iron-selected {
+                background: #33cc33;
+            }
 
-      iron-selector {
-        display: flex;
-      }
+            iron-selector {
+                display: flex;
+            }
 
-      iron-selector div {
-        flex: 1;
-        border: solid 1px #000;
-        padding: 10px;
-        margin: 10px;
-      }
+            iron-selector div {
+                flex: 1;
+                border: solid 1px #000;
+                padding: 10px;
+                margin: 10px;
+            }
 
-      paper-dialog {
-        border: 2px solid;
-        border-color: #232323;
-        background-color: #cdcdcd;
-        color: #000000;
-        padding: 2rem;
+            paper-dialog {
+                border: 2px solid;
+                border-color: #232323;
+                background-color: #cdcdcd;
+                color: #000000;
+                padding: 2rem;
 
-        width: calc(100% - 200px);
-      }
-    </style>
+                width: calc(100% - 200px);
+            }
+        </style>
 
-    <api-dblog
-      auto-update={{autoUpdate}}
-      data="{{dataFromApi}}"
-      page="{{page}}"
-      size="{{size}}"
-      sort-property="[[sortProperty]]"
-      total-elements="{{totalElements}}"
-      total-pages="{{totalPages}}"
-      severity="{{activeSeverity}}"
-      type="{{activeType}}"
-      severity-options="{{severityOptions}}"
-      type-options="{{typeOptions}}"
-      message-filter="[[messageFilter]]"
-    ></api-dblog>
+        <api-dblog
+                auto-update={{autoUpdate}}
+                data="{{dataFromApi}}"
+                page="{{page}}"
+                size="{{size}}"
+                sort-property="[[sortProperty]]"
+                total-elements="{{totalElements}}"
+                total-pages="{{totalPages}}"
+                severity="{{activeSeverity}}"
+                type="{{activeType}}"
+                severity-options="{{severityOptions}}"
+                type-options="{{typeOptions}}"
+                message-filter="[[messageFilter]]"
+        ></api-dblog>
 
-    <paper-toggle-button active="{{autoUpdate}}">Auto update</paper-toggle-button>
+        <paper-toggle-button active="{{autoUpdate}}">Auto update</paper-toggle-button>
 
-    <paper-dialog id="dialogEventDetail">
-      <h2>Event details</h2>
-      <paper-dialog-scrollable>
-        <dblog-detail event-detail="[[selectedItem]]"></dblog-detail>
-      </paper-dialog-scrollable>
-      <div class="buttons">
-        <paper-button dialog-dismiss autofocus>Close</paper-button>
-      </div>
-    </paper-dialog>
+        <paper-dialog id="dialogEventDetail">
+            <h2>Event details</h2>
+            <paper-dialog-scrollable>
+                <dblog-detail event-detail="[[selectedItem]]"></dblog-detail>
+            </paper-dialog-scrollable>
+            <div class="buttons">
+                <paper-button dialog-dismiss autofocus>Close</paper-button>
+            </div>
+        </paper-dialog>
 
-    <iron-selector multi attr-for-selected="name" selected-values="{{activeSeverity}}" fallback-selection="">
-       <template is="dom-repeat" items="[[severityOptions]]" as="column" index-as="index">
-         <div name="[[index]]">[[column]]</div>
-       </template>
-    </iron-selector>
+        <iron-selector multi attr-for-selected="name" selected-values="{{activeSeverity}}" fallback-selection="">
+            <template is="dom-repeat" items="[[severityOptions]]" as="column" index-as="index">
+                <div name="[[index]]">[[column]]</div>
+            </template>
+        </iron-selector>
 
-    <iron-selector multi attr-for-selected="name" selected-values="{{activeType}}" fallback-selection="">
-       <template is="dom-repeat" items="[[typeOptions]]" as="column">
-         <div name="[[column]]">[[column]]</div>
-       </template>
-    </iron-selector>
+        <iron-selector multi attr-for-selected="name" selected-values="{{activeType}}" fallback-selection="">
+            <template is="dom-repeat" items="[[typeOptions]]" as="column">
+                <div name="[[column]]">[[column]]</div>
+            </template>
+        </iron-selector>
 
-    <paper-datatable-api
-      paginate
-      filterable
-      filters
-      data="[[dataFromApi]]"
-      page="{{page}}"
-      size="{{size}}"
-      available-size="[10, 25, 50, 100]"
-      total-elements="[[totalElements]]"
-      total-pages="[[totalPages]]"
-      on-tap-tr="_showDetails"
-      on-filter="_handleFilter"
-    >
-      <paper-datatable-api-column draggable-column header="Severity" property="severity">
-        <template>
-          <span>{{value}}</span>
-        </template>
-      </paper-datatable-api-column>
-      <paper-datatable-api-column draggable-column header="Type" property="type">
-        <template>
-          <span>{{value}}</span>
-        </template>
-      </paper-datatable-api-column>
-      <paper-datatable-api-column header="Date" property="date">
-        <template>
-          <span>{{value}}</span>
-        </template>
-      </paper-datatable-api-column>
-      <paper-datatable-api-column header="Message" property="message" filter>
-        <template>
-          <drupal-safe text="{{value}}"></drupal-safe>
-        </template>
-      </paper-datatable-api-column>
-      <paper-datatable-api-column header="User" property="user.name" hideable>
-        <template>
-          <span>{{value}}</span>
-        </template>
-      </paper-datatable-api-column>
-      <paper-datatable-api-column header="Operations" property="link" hideable>
-        <template>
-          <span>{{value}}</span>
-        </template>
-      </paper-datatable-api-column>
-    </paper-datatable-api>
+        <vaadin-grid aria-label="Basic Binding Example" items="[[dataFromApi]]">
 
-  </template>
+            <vaadin-grid-column>
+                <template class="header">
+                    <vaadin-grid-sorter path="type">Type</vaadin-grid-sorter>
+                </template>
+                <template>[[item.type]]</template>
+            </vaadin-grid-column>
 
-  <script>
-    /**
-     * @customElement
-     * @polymer
-     */
-    class DblogApp extends Polymer.Element {
-      static get is() { return 'dblog-app'; }
-      static get properties() {
-        return {
-          page: {
-            type: String,
-            value: '0'
-          },
-          messageFilter: {
-            type: String,
-            notify: true,
-            value: '',
-          },
-          selectedItem: {
-            type: Object,
-            notify: true,
-          }
-        };
-      }
+            <vaadin-grid-column>
+                <template class="header">
+                    <vaadin-grid-sorter path="date">Date</vaadin-grid-sorter>
+                </template>
+                <template>[[item.date]]</template>
+            </vaadin-grid-column>
 
-      _showDetails(ev) {
-        this.selectedItem = ev.detail.row;
-        this.$.dialogEventDetail.open();
-      }
+            <vaadin-grid-column>
+                <template class="header">
+                    <vaadin-grid-sorter path="message">Message</vaadin-grid-sorter>
+                </template>
+                <template>
+                    <p style="white-space: normal">[[item.message]]</p>
+                </template>
+            </vaadin-grid-column>
 
-      _handleFilter(event) {
-        if (event.detail.filter.property == 'message') {
-          this.messageFilter = event.detail.filter.value;
+            <vaadin-grid-column>
+                <template class="header">
+                    <vaadin-grid-sorter path="user.name">User</vaadin-grid-sorter>
+                </template>
+                <template>
+                    <p style="white-space: normal">[[item.user.name]]</p>
+                </template>
+            </vaadin-grid-column>
+
+        </vaadin-grid>
+
+
+    </template>
+
+    <script>
+        /**
+         * @customElement
+         * @polymer
+         */
+        class DblogApp extends Polymer.Element {
+            static get is() {
+                return 'dblog-app';
+            }
+
+            static get properties() {
+                return {
+                    page: {
+                        type: String,
+                        value: '0'
+                    },
+                    messageFilter: {
+                        type: String,
+                        notify: true,
+                        value: '',
+                    },
+                    selectedItem: {
+                        type: Object,
+                        notify: true,
+                    }
+                };
+            }
+
+            _showDetails(event) {
+                this.selectedItem = event.detail.row;
+                this.$.dialogEventDetail.open();
+            }
+
+            _handleFilter(event) {
+                if (event.detail.filter.property == 'message') {
+                    this.messageFilter = event.detail.filter.value;
+                }
+            }
         }
-      }
-    }
 
-    window.customElements.define(DblogApp.is, DblogApp);
-  </script>
+        window.customElements.define(DblogApp.is, DblogApp);
+    </script>
 </dom-module>
